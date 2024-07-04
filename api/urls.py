@@ -1,7 +1,9 @@
 from django.urls import path
 
-from .views import api
+from .views import getProblemDetail, getProblems, hello
 
 urlpatterns = [
-    path("", api.urls),
+    path("hello/", hello),
+    path("problems/", getProblems),
+    path("problems/detail/<str:idDisplay>", getProblemDetail),
 ]

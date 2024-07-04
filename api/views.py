@@ -1,25 +1,34 @@
-from ninja import NinjaAPI
-from ninja.errors import HttpError
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.views import status
 
 from .models import Problem
-from .schemas import ProblemDescSchema, ProblemSchema
-
-api = NinjaAPI()
+from .serializers import ProblemDetailSerializer, ProblemSerializer
 
 
-@api.get("hello/")
+@api_view(["GET"])
 def hello(request):
-    return {"message": "Hello, world!"}
+    return Response({"message": "Hello, world!"})
 
 
-@api.get("problems/", response=list[ProblemSchema])
+@api_view(["GET"])
 def getProblems(request):
-    return Problem.objects.all()
+    problems = Problem.objects.all()
+    serializer = ProblemSerializer(problems, many=True)
+
+    return Response(serializer.data)
 
 
-@api.get("problems/description/{idDisplay}", response=ProblemDescSchema)
-def getProblemDescription(request, idDisplay: str):
+@api_view(["GET"])
+def getProblemDetail(request, idDisplay: str):
     try:
-        return Problem.objects.get(idDisplay=idDisplay)
+        target = Problem.objects.get(idDisplay=idDisplay)
+        serializer = ProblemDetailSerializer(target)
+
+        return Response(serializer.data)
+
     except Problem.DoesNotExist:
-        raise HttpError(404, f"Problem with id {idDisplay} not found")
+        return Response(
+            {"error": f"problem with id '{idDisplay}' not found!"},
+            status.HTTP_404_NOT_FOUND,
+        )

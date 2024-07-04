@@ -5,5 +5,7 @@ from django.db import models
 class Problem(models.Model):
     idDisplay = models.CharField(max_length=10, unique=True)
 
-    title = models.TextField()
+    title = models.CharField(max_length=256)
     description = models.TextField()
+
+    level = models.IntegerField(default=1)
