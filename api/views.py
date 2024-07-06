@@ -1,9 +1,11 @@
+from rest_framework import generics
 from rest_framework.decorators import api_view
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
-from rest_framework.views import status
 
 from .models import Problem
 from .serializers import ProblemDetailSerializer, ProblemSerializer
+from .utils import ReadOnly
 
 
 @api_view(["GET"])
@@ -11,24 +13,16 @@ def hello(request):
     return Response({"message": "Hello, world!"})
 
 
-@api_view(["GET"])
-def getProblems(request):
-    problems = Problem.objects.all()
-    serializer = ProblemSerializer(problems, many=True)
+class ProblemsList(generics.ListCreateAPIView):
+    permission_classes = [IsAdminUser | ReadOnly]
 
-    return Response(serializer.data)
+    queryset = Problem.objects.all()
+    serializer_class = ProblemSerializer
 
 
-@api_view(["GET"])
-def getProblemDetail(request, idDisplay: str):
-    try:
-        target = Problem.objects.get(idDisplay=idDisplay)
-        serializer = ProblemDetailSerializer(target)
+class ProblemUpdate(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAdminUser | ReadOnly]
 
-        return Response(serializer.data)
-
-    except Problem.DoesNotExist:
-        return Response(
-            {"error": f"problem with id '{idDisplay}' not found!"},
-            status.HTTP_404_NOT_FOUND,
-        )
+    serializer_class = ProblemDetailSerializer
+    queryset = Problem.objects.all()
+    lookup_field = "id"

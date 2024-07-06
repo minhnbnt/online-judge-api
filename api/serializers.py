@@ -1,15 +1,15 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 
 from .models import Problem
 
 
-class ProblemDetailSerializer(ModelSerializer):
+class ProblemDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Problem
-        fields = ["title", "description"]
+        fields = "__all__"
 
 
-class ProblemSerializer(ModelSerializer):
+class ProblemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Problem
-        fields = ["id", "idDisplay", "title", "level"]
+        fields = ["id", "title", "level"]

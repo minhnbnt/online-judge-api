@@ -3,7 +3,7 @@ from django.db import models
 
 # Create your models here.
 class Problem(models.Model):
-    idDisplay = models.CharField(max_length=10, unique=True)
+    id = models.CharField(max_length=10, primary_key=True)
 
     title = models.CharField(max_length=256)
     description = models.TextField()
