@@ -1,6 +1,7 @@
 from itertools import zip_longest
 from typing import Optional
 
+from django.conf import settings
 from rest_framework import generics, status
 from rest_framework.compat import requests
 from rest_framework.decorators import api_view
@@ -9,8 +10,6 @@ from rest_framework.views import Response
 from api.judge.models import Submission
 
 from .serializers import SubmissionSerializer
-
-JUDGE_URL = "https://emkc.org/api/v2/piston/execute"
 
 
 def outputsIsSame(collected: str, expected: str) -> bool:
@@ -94,7 +93,7 @@ class SubmissionViews(generics.CreateAPIView):
             ],
         }
 
-        judgeResponse = requests.post(JUDGE_URL, json=requestBody)
+        judgeResponse = requests.post(settings.JUDGE_URL, json=requestBody)
         # TODO: handle on no internet connection
         if judgeResponse.status_code != status.HTTP_200_OK:
             return Response(
