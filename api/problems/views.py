@@ -3,8 +3,8 @@ from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from api.models import Problem
+from api.permissions import ReadOnly
 
-from .permissions import ReadOnly
 from .serializers import ProblemDetailSerializer, ProblemSerializer
 
 
