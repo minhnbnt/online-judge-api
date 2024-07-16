@@ -8,3 +8,11 @@ class Problem(models.Model):
     description = models.TextField()
 
     level = models.IntegerField(default=1)
+
+    stdin = models.TextField(default="")
+    stdout = models.TextField()
+
+    runFlags = models.TextField(null=True)
+
+    timeLimit = models.IntegerField(null=True)
+    memoryLimit = models.IntegerField(null=True)

@@ -22,6 +22,28 @@ def outputsIsSame(collected: str, expected: str) -> bool:
     return True
 
 
+def getRequestBody(problem, requestData) -> dict:
+    requestBody = {
+        "language": requestData["language"],
+        "version": requestData["version"],
+        "files": [
+            {"content": requestData["source"]},
+        ],
+        "stdin": problem.stdin,
+    }
+
+    if problem.runFlags:
+        requestBody["args"] = problem.runFlags.splitlines()
+
+    if problem.timeLimit and problem.timeLimit > 0:
+        requestBody["run_timeout"] = problem.timeLimit
+
+    if problem.memoryLimit and problem.memoryLimit > 0:
+        requestBody["run_memory_limit"] = problem.memoryLimit
+
+    return requestBody
+
+
 class JudgeResult:
     overAllResult: str
     errorLogs: Optional[str]
@@ -62,15 +84,8 @@ class JudgeResult:
         self.errorLogs = errorLogs
 
 
-def handleJudge(SerializerClass, request):
+def handleJudge(request):
     data = request.data
-
-    serializer = SerializerClass(data=data)
-    if not serializer.is_valid():
-        return Response(
-            serializer.errors,
-            status.HTTP_400_BAD_REQUEST,
-        )
 
     targetProblem = Problem.objects.filter(id=data["problemId"]).first()
     if targetProblem is None:
@@ -79,24 +94,20 @@ def handleJudge(SerializerClass, request):
             status.HTTP_404_NOT_FOUND,
         )
 
-    # TODO: set problems judge rules
-    requestBody = {
-        "language": data["language"],
-        "version": data["version"],
-        "files": [
-            {"content": data["source"]},
-        ],
-    }
+    requestBody = getRequestBody(targetProblem, data)
 
-    judgeResponse = requests.post(settings.JUDGE_URL, json=requestBody)
     # TODO: handle on no internet connection
+    judgeResponse = requests.post(settings.JUDGE_URL, json=requestBody)
     if judgeResponse.status_code != status.HTTP_200_OK:
         return Response(
             judgeResponse.json(),
             judgeResponse.status_code,
         )
 
-    judgeResult = JudgeResult.fromResponse(judgeResponse, "Hello, world!")
+    judgeResult = JudgeResult.fromResponse(
+        judgeResponse,
+        targetProblem.stdout,
+    )
 
     record = Submission(
         owner=request.user,

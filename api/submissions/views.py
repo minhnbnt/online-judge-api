@@ -15,5 +15,4 @@ class SubmissionView(generics.CreateAPIView):
     serializer_class = SubmissionSerializer
 
     def create(self, request):
-        SerializerClass = self.get_serializer_class()
-        return handleJudge(SerializerClass, request)
+        return handleJudge(request)
