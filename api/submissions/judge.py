@@ -6,7 +6,7 @@ from rest_framework import status
 from rest_framework.compat import requests
 from rest_framework.views import Response
 
-from api.problems.models import Problem
+from api.models import Problem
 
 from .models import Submission
 
@@ -22,7 +22,7 @@ def outputsIsSame(collected: str, expected: str) -> bool:
     return True
 
 
-def getRequestBody(problem, requestData) -> dict:
+def getJudgeRequestBody(problem, requestData) -> dict:
     requestBody = {
         "language": requestData["language"],
         "version": requestData["version"],
@@ -68,7 +68,7 @@ class JudgeResult:
             overAllResult = "IR"
             errorLogs = runLog["stderr"]
 
-            if not errorLogs:
+            if not eTrrorLogs:
                 overAllResult = "RTE"
                 errorLogs = None
 
@@ -91,10 +91,10 @@ def handleJudge(request):
     if targetProblem is None:
         return Response(
             {"problemId": "problem with provided id does not exists"},
-            status.HTTP_404_NOT_FOUND,
+            status.HTTP_422_UNPROCESSABLE_ENTITY,
         )
 
-    requestBody = getRequestBody(targetProblem, data)
+    requestBody = getJudgeRequestBody(targetProblem, data)
 
     # TODO: handle on no internet connection
     judgeResponse = requests.post(settings.JUDGE_URL, json=requestBody)
