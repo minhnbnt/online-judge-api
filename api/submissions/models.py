@@ -10,6 +10,7 @@ from api.models import Problem
 class Submission(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     viewId = models.UUIDField(default=uuid4, editable=False)
+    summittedOn = models.DateTimeField(auto_now_add=True)
 
     problem = models.ForeignKey(Problem, on_delete=models.CASCADE)
 

@@ -4,7 +4,7 @@ from .models import Submission
 
 
 class SubmissionSerializer(serializers.Serializer):
-    problem_id = serializers.CharField(required=True)
+    problemId = serializers.CharField(required=True)
 
     language = serializers.CharField(required=True)
     version = serializers.CharField(required=True)

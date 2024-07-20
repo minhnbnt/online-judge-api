@@ -68,7 +68,7 @@ class JudgeResult:
             overAllResult = "IR"
             errorLogs = runLog["stderr"]
 
-            if not eTrrorLogs:
+            if not errorLogs:
                 overAllResult = "RTE"
                 errorLogs = None
 
@@ -97,7 +97,7 @@ def handleJudge(request):
     requestBody = getJudgeRequestBody(targetProblem, data)
 
     # TODO: handle on no internet connection
-    judgeResponse = requests.post(settings.JUDGE_URL, json=requestBody)
+    judgeResponse = requests.post(f"{settings.JUDGE_URL}/execute", json=requestBody)
     if judgeResponse.status_code != status.HTTP_200_OK:
         return Response(
             judgeResponse.json(),
@@ -121,4 +121,4 @@ def handleJudge(request):
 
     record.save()
 
-    return Response(vars(judgeResult))
+    return Response({"viewId": record.viewId})

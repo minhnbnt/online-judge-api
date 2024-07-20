@@ -16,7 +16,7 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-JUDGE_URL = "https://emkc.org/api/v2/piston/execute"
+JUDGE_URL = "https://emkc.org/api/v2/piston"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -38,8 +38,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "rest_framework",
     "rest_framework_simplejwt",
+    "rest_framework",
     "corsheaders",
     "api",
 ]
