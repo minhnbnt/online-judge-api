@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from api import fields
+
 from .models import Submission
 
 
@@ -33,12 +35,22 @@ class SubmissionDetailSerializer(serializers.ModelSerializer):
         read_only=True,
     )
 
+    viewId = fields.ShortUUIDField()
+
     class Meta:
         model = Submission
-        fields = "__all__"
+        fields = [
+            "id",
+            "viewId",
+            "owner",
+            "source",
+            "problem",
+            "language",
+            "version",
+            "judgeResult",
+            "summittedOn",
+        ]
 
 
-class SubmissionViewIdSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Submission
-        fields = ["viewId"]
+class SubmissionViewIdSerializer(serializers.Serializer):
+    viewId = fields.ShortUUIDField()

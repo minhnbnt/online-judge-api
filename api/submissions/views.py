@@ -1,8 +1,9 @@
+import shortuuid
+from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from api.permissions import IsOwner, ReadOnly
 
@@ -13,7 +14,6 @@ from .serializers import (SubmissionDetailSerializer, SubmissionSerializer,
 
 
 class SubmissionView(generics.ListCreateAPIView):
-    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated | ReadOnly]
 
     serializer_class = SubmissionSerializer
@@ -36,7 +36,6 @@ class SubmissionView(generics.ListCreateAPIView):
 
 
 class SubmissionViewId(generics.RetrieveAPIView):
-    authentication_classes = [JWTAuthentication]
     permission_classes = [IsOwner]
 
     serializer_class = SubmissionViewIdSerializer
@@ -48,3 +47,12 @@ class SubmissionDetailView(generics.RetrieveAPIView):
     serializer_class = SubmissionDetailSerializer
     queryset = Submission.objects.all()
     lookup_field = "viewId"
+
+    def get_object(self):
+        querySet = self.get_queryset()
+        shorteduuid = self.kwargs["viewId"]
+
+        uuid = shortuuid.decode(shorteduuid)
+        obj = get_object_or_404(querySet, viewId=uuid)
+
+        return obj

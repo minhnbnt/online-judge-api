@@ -9,6 +9,7 @@ from rest_framework.views import Response
 from api.models import Problem
 
 from .models import Submission
+from .serializers import SubmissionViewIdSerializer
 
 
 def outputsIsSame(collected: str, expected: str) -> bool:
@@ -120,5 +121,6 @@ def handleJudge(request):
     )
 
     record.save()
+    serializer = SubmissionViewIdSerializer(record)
 
-    return Response({"viewId": record.viewId})
+    return Response(serializer.data)

@@ -1,6 +1,5 @@
 from rest_framework import generics
 from rest_framework.permissions import IsAdminUser
-from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from api.models import Problem
 from api.permissions import ReadOnly
@@ -9,7 +8,6 @@ from .serializers import ProblemDetailSerializer, ProblemSerializer
 
 
 class ProblemsList(generics.ListCreateAPIView):
-    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAdminUser | ReadOnly]
 
     queryset = Problem.objects.all()
@@ -17,7 +15,6 @@ class ProblemsList(generics.ListCreateAPIView):
 
 
 class ProblemUpdate(generics.RetrieveUpdateDestroyAPIView):
-    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAdminUser | ReadOnly]
 
     serializer_class = ProblemDetailSerializer
