@@ -3,16 +3,28 @@ from rest_framework import serializers
 from .models import Submission
 
 
-class SubmissionSerializer(serializers.Serializer):
-    problemId = serializers.CharField(required=True)
-
-    language = serializers.CharField(required=True)
-    version = serializers.CharField(required=True)
-    source = serializers.CharField(
-        required=True,
-        write_only=True,
-        style={"base_template": "textarea.html"},
+class SubmissionSerializer(serializers.ModelSerializer):
+    owner = serializers.SlugRelatedField(
+        slug_field="username",
+        read_only=True,
     )
+
+    class Meta:
+        model = Submission
+        fields = [
+            "id",
+            "owner",
+            "source",
+            "problem",
+            "language",
+            "judgeResult",
+            "summittedOn",
+        ]
+
+        extra_kwargs = {
+            "source": {"write_only": True},
+            "judgeResult": {"read_only": True},
+        }
 
 
 class SubmissionDetailSerializer(serializers.ModelSerializer):

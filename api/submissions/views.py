@@ -1,3 +1,4 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -18,17 +19,20 @@ class SubmissionView(generics.ListCreateAPIView):
     serializer_class = SubmissionSerializer
     queryset = Submission.objects.all()
 
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["problem", "owner"]
+
     def create(self, request):
         SerializerClass = self.get_serializer_class()
         serializer = SerializerClass(data=request.data)
 
-        if not serializer.is_valid():
-            return Response(
-                serializer.errors,
-                status.HTTP_400_BAD_REQUEST,
-            )
+        if serializer.is_valid():
+            return handleJudge(request)
 
-        return handleJudge(request)
+        return Response(
+            serializer.errors,
+            status.HTTP_400_BAD_REQUEST,
+        )
 
 
 class SubmissionViewId(generics.RetrieveAPIView):

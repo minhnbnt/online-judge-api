@@ -87,10 +87,10 @@ class JudgeResult:
 def handleJudge(request):
     data = request.data
 
-    targetProblem = Problem.objects.filter(id=data["problemId"]).first()
+    targetProblem = Problem.objects.filter(id=data["problem"]).first()
     if targetProblem is None:
         return Response(
-            {"problemId": "problem with provided id does not exists"},
+            {"problem": "problem with provided id does not exists"},
             status.HTTP_422_UNPROCESSABLE_ENTITY,
         )
 
