@@ -5,7 +5,7 @@ from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from api.permissions import IsOwner, ReadOnly
+from shared.permissions import IsOwner, ReadOnly
 
 from .judge import handleJudge
 from .models import Submission

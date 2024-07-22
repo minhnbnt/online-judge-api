@@ -2,7 +2,7 @@ from rest_framework import generics
 from rest_framework.permissions import IsAdminUser
 
 from api.models import Problem
-from api.permissions import ReadOnly
+from shared.permissions import ReadOnly
 
 from .serializers import ProblemDetailSerializer, ProblemSerializer
 

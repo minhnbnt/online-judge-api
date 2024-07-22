@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from api import fields
+from shared import fields
 
 from .models import Submission
 
