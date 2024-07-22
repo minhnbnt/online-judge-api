@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("api", "0006_alter_submission_errorlogs"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),

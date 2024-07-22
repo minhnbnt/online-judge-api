@@ -1,6 +1,7 @@
 from uuid import UUID
 
 import shortuuid
+
 from rest_framework import serializers
 
 

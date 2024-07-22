@@ -1,0 +1,3 @@
+[lint.isort]
+force-wrap-aliases = true
+combine-as-imports = true

@@ -1,7 +1,10 @@
 import shortuuid
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
+
 from django_filters.rest_framework import DjangoFilterBackend
+
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -10,8 +13,11 @@ from shared.permissions import IsOwner, ReadOnly
 
 from .judge import handleJudge
 from .models import Submission
-from .serializers import (SubmissionDetailSerializer, SubmissionSerializer,
-                          SubmissionViewIdSerializer)
+from .serializers import (
+    SubmissionDetailSerializer,
+    SubmissionSerializer,
+    SubmissionViewIdSerializer,
+)
 
 
 class SubmissionView(generics.ListCreateAPIView):
@@ -62,4 +68,4 @@ class SubmissionDetailView(generics.RetrieveAPIView):
         # ValueError will only raise when input
         # length very long, so no uuid will match this
         except (ObjectDoesNotExist, ValueError):
-            raise Http404("not found")
+            raise Http404("Not found")

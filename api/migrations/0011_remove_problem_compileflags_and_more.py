@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("api", "0010_remove_problem_config_problem_compileflags_and_more"),
     ]
