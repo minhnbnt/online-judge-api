@@ -1,5 +1,6 @@
 import shortuuid
-from django.shortcuts import get_object_or_404
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import Http404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
@@ -52,7 +53,13 @@ class SubmissionDetailView(generics.RetrieveAPIView):
         querySet = self.get_queryset()
         shorteduuid = self.kwargs["viewId"]
 
-        uuid = shortuuid.decode(shorteduuid)
-        obj = get_object_or_404(querySet, viewId=uuid)
+        try:
+            uuid = shortuuid.decode(shorteduuid)
+            obj = querySet.get(viewId=uuid)
 
-        return obj
+            return obj
+
+        # ValueError will only raise when input
+        # length very long, so no uuid will match this
+        except (ObjectDoesNotExist, ValueError):
+            raise Http404("not found")

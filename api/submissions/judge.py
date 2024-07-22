@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from itertools import zip_longest
 from typing import Optional
 
@@ -45,6 +46,7 @@ def getJudgeRequestBody(problem, requestData) -> dict:
     return requestBody
 
 
+@dataclass
 class JudgeResult:
     overAllResult: str
     errorLogs: Optional[str]
@@ -80,10 +82,6 @@ class JudgeResult:
 
         return cls("WA", None)
 
-    def __init__(self, overAllResult, errorLogs):
-        self.overAllResult = overAllResult
-        self.errorLogs = errorLogs
-
 
 def handleJudge(request):
     data = request.data
@@ -95,10 +93,27 @@ def handleJudge(request):
             status.HTTP_422_UNPROCESSABLE_ENTITY,
         )
 
-    requestBody = getJudgeRequestBody(targetProblem, data)
+    requestConfig = {
+        "json": getJudgeRequestBody(targetProblem, data),
+        "url": f"{settings.JUDGE_URL}/execute",
+        "timeout": 60,
+    }
 
-    # TODO: handle on no internet connection
-    judgeResponse = requests.post(f"{settings.JUDGE_URL}/execute", json=requestBody)
+    try:
+        judgeResponse = requests.post(**requestConfig)
+
+    except requests.ConnectionError:
+        return Response(
+            {"detail": "Could not reach the judge server."},
+            status.HTTP_502_BAD_GATEWAY,
+        )
+
+    except requests.Timeout:
+        return Response(
+            {"detail": "Judging request timed out."},
+            status.HTTP_504_GATEWAY_TIMEOUT,
+        )
+
     if judgeResponse.status_code != status.HTTP_200_OK:
         return Response(
             judgeResponse.json(),
