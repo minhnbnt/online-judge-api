@@ -9,4 +9,5 @@ urlpatterns = [
     path("token/", include("api.token.urls")),
     path("problems/", include("api.problems.urls")),
     path("submissions/", include("api.submissions.urls")),
+    path("schema/", include("api.schema.urls")),
 ]
