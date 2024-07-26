@@ -10,7 +10,7 @@ class Problem(models.Model):
     level = models.IntegerField(default=1)
 
     stdin = models.TextField(default="")
-    stdout = models.TextField()
+    stdout = models.TextField(blank=False)
 
     runFlags = models.TextField(null=True)
 

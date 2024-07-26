@@ -1,5 +1,3 @@
-import shortuuid
-
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
 
@@ -11,6 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from shared.permissions import IsOwner, ReadOnly
+from shared.shortuuid import uuidShortener
 
 from .judge import handleJudge
 from .models import Submission
@@ -55,14 +54,13 @@ class SubmissionViewId(generics.RetrieveAPIView):
 class SubmissionDetailView(generics.RetrieveAPIView):
     serializer_class = SubmissionDetailSerializer
     queryset = Submission.objects.all()
-    lookup_field = "viewId"
 
     def get_object(self):
         querySet = self.get_queryset()
         shorteduuid = self.kwargs["viewId"]
 
         try:
-            uuid = shortuuid.decode(shorteduuid)
+            uuid = uuidShortener.decode(shorteduuid)
             obj = querySet.get(viewId=uuid)
 
             return obj

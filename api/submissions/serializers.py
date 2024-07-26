@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from shared import fields
+from api.problems.serializers import ProblemSerializer
 
 from .models import Submission
 
@@ -30,6 +31,7 @@ class SubmissionSerializer(serializers.ModelSerializer):
 
 
 class SubmissionDetailSerializer(serializers.ModelSerializer):
+    problem = ProblemSerializer(many=False)
     owner = serializers.SlugRelatedField(
         slug_field="username",
         read_only=True,
