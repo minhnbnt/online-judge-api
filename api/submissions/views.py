@@ -6,6 +6,7 @@ from django.http import Http404
 from django_filters.rest_framework import DjangoFilterBackend
 
 from rest_framework import generics, status
+from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -26,8 +27,9 @@ class SubmissionView(generics.ListCreateAPIView):
     serializer_class = SubmissionSerializer
     queryset = Submission.objects.all()
 
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [OrderingFilter, DjangoFilterBackend]
     filterset_fields = ["problem", "owner"]
+    ordering = ["-id"]
 
     def create(self, request):
         SerializerClass = self.get_serializer_class()
