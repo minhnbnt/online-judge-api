@@ -18,7 +18,6 @@ class SubmissionSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "owner",
-            "source",
             "problem",
             "language",
             "judgeResult",

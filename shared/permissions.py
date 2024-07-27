@@ -9,3 +9,8 @@ class ReadOnly(BasePermission):
 class IsOwner(BasePermission):
     def has_object_permission(self, request, _, obj):
         return obj.owner == request.user
+
+
+class IsSelf(BasePermission):
+    def has_object_permission(self, request, _, obj):
+        return request.user == obj
