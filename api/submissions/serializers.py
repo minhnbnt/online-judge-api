@@ -7,6 +7,7 @@ from .models import Submission
 
 
 class SubmissionSerializer(serializers.ModelSerializer):
+    problem = ProblemSerializer(many=False)
     owner = serializers.SlugRelatedField(
         slug_field="username",
         read_only=True,
@@ -24,20 +25,14 @@ class SubmissionSerializer(serializers.ModelSerializer):
             "summittedOn",
         ]
 
-        extra_kwargs = {
-            "source": {"write_only": True},
-            "judgeResult": {"read_only": True},
-        }
-
 
 class SubmissionDetailSerializer(serializers.ModelSerializer):
-    problem = ProblemSerializer(many=False)
     owner = serializers.SlugRelatedField(
         slug_field="username",
         read_only=True,
     )
 
-    viewId = fields.ShortUUIDField()
+    viewId = fields.ShortUUIDField(read_only=True)
 
     class Meta:
         model = Submission
@@ -52,6 +47,11 @@ class SubmissionDetailSerializer(serializers.ModelSerializer):
             "judgeResult",
             "summittedOn",
         ]
+
+        extra_kwargs = {
+            "judgeResult": {"read_only": True},
+            "submittedOn": {"read_only": True},
+        }
 
 
 class SubmissionViewIdSerializer(serializers.Serializer):

@@ -23,16 +23,21 @@ from .serializers import (
 class SubmissionView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated | ReadOnly]
 
-    serializer_class = SubmissionSerializer
     queryset = Submission.objects.all()
 
     filter_backends = [OrderingFilter, DjangoFilterBackend]
     filterset_fields = ["problem", "owner"]
     ordering = ["-id"]
 
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return SubmissionSerializer
+
+        return SubmissionDetailSerializer
+
     def create(self, request):
-        SerializerClass = self.get_serializer_class()
-        serializer = SerializerClass(data=request.data)
+        Serializer = self.get_serializer_class()
+        serializer = Serializer(data=request.data)
 
         if serializer.is_valid():
             return handleJudge(request)
