@@ -6,14 +6,13 @@ from api.models import Problem
 class ProblemDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Problem
-        fields = "__all__"
+        fields = ["id", "title", "description", "level"]
 
-        extra_kwargs = {
-            "stdin": {"write_only": True},
-            "stdout": {"write_only": True},
-            "runFlags": {"write_only": True},
-            "compileFlags": {"write_only": True},
-        }
+
+class ProblemDetailAdminSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Problem
+        fields = "__all__"
 
 
 class ProblemSerializer(serializers.ModelSerializer):

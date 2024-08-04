@@ -1,8 +1,8 @@
 from django.urls import path
 
-from .views import ProblemsList, ProblemUpdate
+from .views import ProblemsListView, ProblemDetailView
 
 urlpatterns = [
-    path("", ProblemsList.as_view()),
-    path("<str:id>/", ProblemUpdate.as_view()),
+    path("", ProblemsListView.as_view()),
+    path("<str:id>/", ProblemDetailView.as_view()),
 ]
