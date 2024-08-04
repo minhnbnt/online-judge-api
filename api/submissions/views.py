@@ -5,7 +5,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from rest_framework import generics, status
 from rest_framework.filters import OrderingFilter
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 
 from shared.permissions import IsOwner, ReadOnly
@@ -49,7 +49,7 @@ class SubmissionView(generics.ListCreateAPIView):
 
 
 class SubmissionViewId(generics.RetrieveAPIView):
-    permission_classes = [IsOwner]
+    permission_classes = [IsOwner | IsAdminUser]
 
     serializer_class = SubmissionViewIdSerializer
     queryset = Submission.objects.all()
