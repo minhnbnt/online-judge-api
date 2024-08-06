@@ -5,6 +5,7 @@ from typing import Optional
 from django.conf import settings
 from rest_framework import status
 from rest_framework.compat import requests
+from rest_framework.exceptions import APIException
 from rest_framework.views import Response
 
 from api.models import Problem
@@ -83,15 +84,17 @@ class JudgeResult:
         return cls("WA", None)
 
 
+def errorResponse(code: str, detail: str, status: int) -> APIException:
+    result = APIException(detail, code)
+    result.status_code = status
+
+    return result
+
+
 def handleJudge(request):
     data = request.data
 
-    targetProblem = Problem.objects.filter(id=data["problem"]).first()
-    if targetProblem is None:
-        return Response(
-            {"problem": "problem with provided id does not exists"},
-            status.HTTP_422_UNPROCESSABLE_ENTITY,
-        )
+    targetProblem = Problem.objects.get(id=data["problem"])
 
     requestConfig = {
         "json": getJudgeRequestBody(targetProblem, data),
@@ -101,23 +104,27 @@ def handleJudge(request):
 
     try:
         judgeResponse = requests.post(**requestConfig)
+        judgeResponse.raise_for_status()
 
     except requests.ConnectionError:
-        return Response(
-            {"detail": "Could not reach the judge server."},
-            status.HTTP_502_BAD_GATEWAY,
+        raise errorResponse(
+            "service_unavailable",
+            "Could not reach the judge server.",
+            status.HTTP_503_SERVICE_UNAVAILABLE,
         )
 
     except requests.Timeout:
-        return Response(
-            {"detail": "Judging request timed out."},
+        raise errorResponse(
+            "gateway_timeout",
+            "Judging request timeout.",
             status.HTTP_504_GATEWAY_TIMEOUT,
         )
 
-    if judgeResponse.status_code != status.HTTP_200_OK:
-        return Response(
-            judgeResponse.json(),
-            judgeResponse.status_code,
+    except requests.HTTPError as e:
+        raise errorResponse(
+            "judge_server_error",
+            e.response.json(),
+            e.response.status_code,
         )
 
     judgeResult = JudgeResult.fromResponse(
