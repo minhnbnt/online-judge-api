@@ -1,4 +1,5 @@
 from rest_framework import generics
+from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAdminUser
 
 from api.models import Problem
@@ -16,6 +17,9 @@ class ProblemsListView(generics.ListCreateAPIView):
 
     queryset = Problem.objects.all()
     serializer_class = ProblemSerializer
+
+    filter_backends = [OrderingFilter]
+    ordering = ["id"]
 
 
 class ProblemDetailView(generics.RetrieveUpdateDestroyAPIView):
