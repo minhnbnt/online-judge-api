@@ -1,10 +1,9 @@
 from rest_framework import generics
-from rest_framework.filters import OrderingFilter
+from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.permissions import IsAdminUser
 
 from api.models import Problem
 from shared.permissions import ReadOnly
-
 from .serializers import (
     ProblemDetailAdminSerializer,
     ProblemDetailSerializer,
@@ -18,7 +17,8 @@ class ProblemsListView(generics.ListCreateAPIView):
     queryset = Problem.objects.all()
     serializer_class = ProblemSerializer
 
-    filter_backends = [OrderingFilter]
+    filter_backends = [OrderingFilter, SearchFilter]
+    search_fields = ["id", "title"]
     ordering = ["id"]
 
 
