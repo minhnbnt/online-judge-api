@@ -2,9 +2,10 @@ from dataclasses import dataclass
 from itertools import zip_longest
 from typing import Optional
 
+import requests
+
 from django.conf import settings
 from rest_framework import status
-from rest_framework.compat import requests
 from rest_framework.exceptions import APIException
 from rest_framework.views import Response
 
