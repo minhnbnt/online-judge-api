@@ -1,5 +1,6 @@
 from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions
+
 from rest_framework import serializers
 
 from .models import User
@@ -11,7 +12,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         fields = ["id", "username", "email", "password"]
         extra_kwargs = {"password": {"write_only": True}}
 
-    def validate_password(self, password: str):
+    def validate_password(self, password: str): # noqa
         try:
             validate_password(password)
             return password

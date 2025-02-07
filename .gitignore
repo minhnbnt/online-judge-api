@@ -9,3 +9,7 @@ __pycache__/
 .env
 db.sqlite3
 mysql.toml
+
+# pixi environments
+.pixi
+*.egg-info

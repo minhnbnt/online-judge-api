@@ -95,7 +95,7 @@ def errorResponse(code: str, detail: str, status: int) -> APIException:
 def handleJudge(request):
     data = request.data
 
-    targetProblem = Problem.objects.get(id=data["problem"])
+    targetProblem = Problem.objects.get(id=data["problem"])  # noqa
 
     requestConfig = {
         "json": getJudgeRequestBody(targetProblem, data),

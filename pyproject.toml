@@ -1,0 +1,15 @@
+[project]
+authors = [{name = "minhnbnt", email = "minhnbnt@gmail.com"}]
+name = "online-judge-api"
+requires-python = ">= 3.11"
+version = "0.1.0"
+dependencies = [ "django>=5.1.6,<6", "django-cors-headers>=4.7.0,<5", "django-filter>=24.3,<25", "djangorestframework>=3.15.2,<4", "djangorestframework-simplejwt>=5.4.0,<6", "drf-spectacular>=0.28.0,<0.29", "requests>=2.32.3,<3", "shortuuid>=1.0.13,<2"]
+
+[tool.pixi.project]
+channels = ["conda-forge"]
+platforms = ["linux-64"]
+
+[tool.pixi.pypi-dependencies]
+online_judge_api = { path = ".", editable = true }
+
+[tool.pixi.tasks]

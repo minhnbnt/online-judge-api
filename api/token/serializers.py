@@ -4,6 +4,4 @@ from rest_framework_simplejwt import serializers
 class TokenObtainPairSerializer(serializers.TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
-        token = super().get_token(user)
-        # may be change later
-        return token
+        return super().get_token(user)
