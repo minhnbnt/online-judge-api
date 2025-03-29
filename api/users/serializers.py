@@ -12,7 +12,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         fields = ["id", "username", "email", "password"]
         extra_kwargs = {"password": {"write_only": True}}
 
-    def validate_password(self, password: str): # noqa
+    def validate_password(self, password: str):  # noqa
         try:
             validate_password(password)
             return password

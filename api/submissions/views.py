@@ -10,7 +10,7 @@ from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
 from shared.permissions import IsOwner, ReadOnly
 
-from .judge import handleJudge
+from .judge import handle_judge
 from .models import Submission
 from .serializers import (
     SubmissionDetailSerializer,
@@ -25,7 +25,7 @@ class SubmissionView(generics.ListCreateAPIView):
     queryset = Submission.objects.all()  # noqa
 
     filter_backends = [OrderingFilter, DjangoFilterBackend]
-    filterset_fields = ["problem", "owner"] # noqa
+    filterset_fields = ["problem", "owner"]  # noqa
     ordering = ["-id"]
 
     def get_serializer_class(self):
@@ -39,7 +39,7 @@ class SubmissionView(generics.ListCreateAPIView):
         serializer = serializer_class(data=request.data)
 
         serializer.is_valid(raise_exception=True)
-        return handleJudge(request)
+        return handle_judge(request.user, request.data)
 
 
 class SubmissionViewId(generics.RetrieveAPIView):
