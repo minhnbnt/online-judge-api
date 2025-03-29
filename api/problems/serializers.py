@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from api.models import Problem
+from .models import Problem, Comment
 
 
 class ProblemDetailSerializer(serializers.ModelSerializer):
@@ -28,4 +28,20 @@ class ProblemSerializer(serializers.ModelSerializer):
             "description": {"write_only": True},
             "memoryLimit": {"write_only": True},
             "compileFlags": {"write_only": True},
+        }
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    user = serializers.SlugRelatedField(
+        slug_field="username",
+        read_only=True,
+    )
+
+    class Meta:
+        model = Comment
+        fields = ["user", "comment", "commentedOn"]
+
+        extra_kwargs = {
+            "user": {"read_only": True},
+            "commentedOn": {"read_only": True}
         }

@@ -1,10 +1,12 @@
+from django.template.defaulttags import comment
 from rest_framework import generics
 from rest_framework.filters import OrderingFilter, SearchFilter
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
-from api.models import Problem
+from api.problems.models import Problem, Comment
 from shared.permissions import ReadOnly
 from .serializers import (
+    CommentSerializer,
     ProblemDetailAdminSerializer,
     ProblemDetailSerializer,
     ProblemSerializer,
@@ -33,3 +35,25 @@ class ProblemDetailView(generics.RetrieveUpdateDestroyAPIView):
             return ProblemDetailSerializer
 
         return ProblemDetailAdminSerializer
+
+
+class CommentListView(generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticated | ReadOnly]
+
+    serializer_class = CommentSerializer
+    lookup_field = "id"
+
+    ordering = ["submittedOn"]
+
+    def get_queryset(self):
+        problem_id = self.kwargs["id"]
+        return Comment.objects.filter(problem_id=problem_id)
+
+    def perform_create(self, serializer):
+        new_comment = Comment(
+            user=self.request.user,
+            problem_id=self.kwargs["id"],
+            **self.request.data
+        )
+
+        return new_comment.save()

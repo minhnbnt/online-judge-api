@@ -1,4 +1,5 @@
 from django.db import models
+from api.users.models import User
 
 
 class Problem(models.Model):
@@ -16,3 +17,11 @@ class Problem(models.Model):
 
     timeLimit = models.IntegerField(null=True)
     memoryLimit = models.IntegerField(null=True)
+
+
+class Comment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    problem = models.ForeignKey(Problem, on_delete=models.CASCADE)
+
+    comment = models.TextField(blank=False)
+    commentedOn = models.DateTimeField(auto_now_add=True)

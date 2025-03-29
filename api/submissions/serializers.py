@@ -21,7 +21,7 @@ class SubmissionSerializer(serializers.ModelSerializer):
             "problem",
             "language",
             "judgeResult",
-            "summittedOn",
+            "submittedOn",
         ]
 
 
@@ -44,7 +44,7 @@ class SubmissionDetailSerializer(serializers.ModelSerializer):
             "language",
             "version",
             "judgeResult",
-            "summittedOn",
+            "submittedOn",
         ]
 
         extra_kwargs = {
